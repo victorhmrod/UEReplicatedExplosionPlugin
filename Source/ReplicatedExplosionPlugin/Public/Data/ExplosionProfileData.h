@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "NiagaraSystem.h"
+#include "Camera/CameraShakeBase.h"
 #include "Engine/DataAsset.h"
 #include "ExplosionProfileData.generated.h"
 
