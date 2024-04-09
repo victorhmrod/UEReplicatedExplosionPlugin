@@ -83,7 +83,7 @@ void UExplosionComponent::Multicast_PropagateEffects_Implementation(const FVecto
 	if (ExplosionProfile->Sound)
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplosionProfile->Sound, InOwnerLocation,
 		                                      FRotator(0.f, 0.f, 0.f), 1.f, 1.f, 0.f,
-		                                      ExplosionProfile->Attenuation ? ExplosionProfile->Attenuation : nullptr);
+		                                      ExplosionProfile->Attenuation);
 }
 
 void UExplosionComponent::Server_PropagateDamage_Implementation(const FVector InOwnerLocation)

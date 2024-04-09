@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "NiagaraSystem.h"
 #include "Camera/CameraShakeBase.h"
+#include "Sound/SoundBase.h"
 #include "Engine/DataAsset.h"
 #include "ExplosionProfileData.generated.h"
 
@@ -16,10 +17,10 @@ class UExplosionProfile : public UDataAsset
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFX")
-	UParticleSystem* CascadedParticle;
+	TObjectPtr<UParticleSystem> CascadedParticle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFX")
-	UNiagaraSystem* NiagaraParticle;
+	TObjectPtr<UNiagaraSystem> NiagaraParticle;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFX")
 	FVector EffectScale = {1.f, 1.f, 1.f};
@@ -28,13 +29,13 @@ public:
 	TSubclassOf<UCameraShakeBase> CamShakeClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SFX")
-	USoundBase* Sound;
+	TObjectPtr<USoundBase> Sound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Misc")
 	FName NoiseTag = "1";
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SFX")
-	USoundAttenuation* Attenuation;
+	TObjectPtr<USoundAttenuation> Attenuation;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
 	float Radius = 1000.0;
@@ -43,7 +44,7 @@ public:
 	FVector2D DamageRange = {15, 30};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
-	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes; 
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
 };
 
 class REPLICATEDEXPLOSIONPLUGIN_API UExplosionProfileData
