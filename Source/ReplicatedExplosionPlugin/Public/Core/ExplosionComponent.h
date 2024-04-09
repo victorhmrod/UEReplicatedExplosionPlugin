@@ -26,7 +26,7 @@ public:
 	TObjectPtr<UExplosionProfile> ExplosionProfile;
 	
 	UFUNCTION(BlueprintCallable, Category="Explosion")
-	void Explode(bool UseComponentAttach = false, UPrimitiveComponent* IfUseComponent = nullptr);
+	void Explode();
 
 private:
 	UFUNCTION(NetMulticast, Reliable, Category="Explosion")

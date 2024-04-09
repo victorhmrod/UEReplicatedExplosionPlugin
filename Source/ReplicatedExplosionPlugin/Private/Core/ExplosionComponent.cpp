@@ -6,6 +6,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Actor.h"
+#include "Engine/World.h"
 #include "Utils/Damage_Interface.h"
 
 UExplosionComponent::UExplosionComponent()
@@ -34,7 +35,7 @@ void UExplosionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	if (!IsValid(ExplosionProfile)) return;
 }
 
-void UExplosionComponent::Explode(bool UseComponentAttach, UPrimitiveComponent* IfUseComponent)
+void UExplosionComponent::Explode()
 {
 	if (!ComponentOwner.IsValid()) return;
 	if (!IsValid(ExplosionProfile)) return;
@@ -47,19 +48,19 @@ void UExplosionComponent::Explode(bool UseComponentAttach, UPrimitiveComponent* 
 		// ReSharper disable once CppAssignedValueIsNeverUsed
 		DummyUnlocked = false;
 
-		const FVector OwnerLocation = UseComponentAttach ? IfUseComponent->GetComponentLocation() : GetOwner()->GetActorLocation();
-
 		if (ExplosionProfile->CamShakeClass)
-			UGameplayStatics::PlayWorldCameraShake(GetWorld(), ExplosionProfile->CamShakeClass, OwnerLocation, 50.f, 2000.f, 1.f, false);
+			UGameplayStatics::PlayWorldCameraShake(GetWorld(), ExplosionProfile->CamShakeClass,
+			                                       GetOwner()->GetActorLocation(), 50.f, 2000.f, 1.f, false);
 		
 		if (UKismetSystemLibrary::IsStandalone(this) && GetOwner())
 		{
-			GetOwner()->MakeNoise(1.f, nullptr, OwnerLocation, ExplosionProfile->Radius * 5.f, ExplosionProfile->NoiseTag);
+			GetOwner()->MakeNoise(1.f, nullptr, GetOwner()->GetActorLocation(), ExplosionProfile->Radius * 5.f,
+			                      ExplosionProfile->NoiseTag);
 		}
 
-		Server_PropagateDamage(OwnerLocation);
+		Server_PropagateDamage(GetOwner()->GetActorLocation());
 		
-		Multicast_PropagateEffects(OwnerLocation);
+		Multicast_PropagateEffects(GetOwner()->GetActorLocation());
 	}
 }
 
@@ -70,25 +71,25 @@ void UExplosionComponent::Multicast_PropagateEffects_Implementation(const FVecto
 	
 	if (ExplosionProfile->CascadedParticle)
 	{
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionProfile->CascadedParticle, InOwnerLocation, FRotator(0.f, 0.f, 0.f), ExplosionProfile->EffectScale, true);
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionProfile->CascadedParticle, InOwnerLocation,
+		                                         FRotator(0.f, 0.f, 0.f), ExplosionProfile->EffectScale, true);
 	}
 	else if (ExplosionProfile->NiagaraParticle)
 	{
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionProfile->NiagaraParticle, InOwnerLocation, FRotator(0.f, 0.f, 0.f), ExplosionProfile->EffectScale, true);
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionProfile->NiagaraParticle, InOwnerLocation,
+		                                               FRotator(0.f, 0.f, 0.f), ExplosionProfile->EffectScale, true);
 	}
 		
 	if (ExplosionProfile->Sound)
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplosionProfile->Sound, InOwnerLocation, FRotator(0.f, 0.f, 0.f), 1.f, 1.f, 0.f, ExplosionProfile->Attenuation ? ExplosionProfile->Attenuation : nullptr);
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplosionProfile->Sound, InOwnerLocation,
+		                                      FRotator(0.f, 0.f, 0.f), 1.f, 1.f, 0.f,
+		                                      ExplosionProfile->Attenuation ? ExplosionProfile->Attenuation : nullptr);
 }
 
 void UExplosionComponent::Server_PropagateDamage_Implementation(const FVector InOwnerLocation)
 {
 	if (!ComponentOwner.IsValid()) return;
 	if (!IsValid(ExplosionProfile)) return;
-	
-	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
-	ObjectTypes.Add(ObjectTypeQuery3);
-	ObjectTypes.Add(ObjectTypeQuery6);
 
 	TArray<AActor*> IgnoredActors;
 	IgnoredActors.Add(GetOwner() ? GetOwner() : nullptr);
@@ -96,19 +97,28 @@ void UExplosionComponent::Server_PropagateDamage_Implementation(const FVector In
 	TArray<FHitResult> HitResults;
 
 	// ReSharper disable once CppTooWideScope
-	const bool bHit = UKismetSystemLibrary::SphereTraceMultiForObjects(GetWorld(), InOwnerLocation, InOwnerLocation, ExplosionProfile->Radius,
-	                                                                   ObjectTypes, false, IgnoredActors, EDrawDebugTrace::None,
-	                                                                   HitResults, true);
+	const bool bHit = UKismetSystemLibrary::SphereTraceMultiForObjects(GetWorld(), InOwnerLocation, InOwnerLocation,
+	                                                                   ExplosionProfile->Radius,
+	                                                                   ExplosionProfile->ObjectTypes, false,
+	                                                                   IgnoredActors, EDrawDebugTrace::None, HitResults,
+	                                                                   true);
 	if (bHit)
 	{
 		TArray<AActor*> NearbyActors;
 		
 		for (const auto& ArrayElement : HitResults)
+		{
 			NearbyActors.AddUnique(ArrayElement.GetActor());
+		}
 		
 		if (NearbyActors.Num() > 0)
 			for (const auto& ArrayElement : NearbyActors)
-		IDamage_Interface::Execute_OnExplosionHit(ArrayElement, FMath::FRandRange(ExplosionProfile->DamageRange.X, ExplosionProfile->DamageRange.Y), GetOwner());
+			{
+				IDamage_Interface::Execute_OnExplosionHit(ArrayElement,
+				                                          FMath::FRandRange(
+					                                          ExplosionProfile->DamageRange.X,
+					                                          ExplosionProfile->DamageRange.Y), GetOwner());
+			}
 	}
 }
 

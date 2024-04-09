@@ -40,6 +40,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
 	FVector2D DamageRange = {15, 30};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes; 
 };
 
 class REPLICATEDEXPLOSIONPLUGIN_API UExplosionProfileData
