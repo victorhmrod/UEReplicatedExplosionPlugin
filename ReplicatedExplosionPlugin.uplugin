@@ -9,14 +9,14 @@
 	"CreatedByURL": "https://discord.gg/h8CMcqQg2r",
 	"DocsURL": "",
 	"MarketplaceURL": "",
-	"SupportURL": "",
+	"SupportURL": "https://discord.gg/h8CMcqQg2r",
 	"CanContainContent": true,
-	"IsBetaVersion": true,
+	"IsBetaVersion": false,
 	"IsExperimentalVersion": false,
 	"Installed": false,
 	"Modules": [
 		{
-			"Name": "InstantExplosion",
+			"Name": "ReplicatedExplosionPlugin",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}
