@@ -24,15 +24,18 @@ void UExplosionComponent::BeginPlay()
 	Super::BeginPlay();
 
 	ComponentOwner = CastChecked<AActor>(GetOwner());
+
+	if (!IsValid(ExplosionProfile))
+		UKismetSystemLibrary::PrintString(GetWorld(), "The explosion profile is empty");
 }
 
 void UExplosionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
                                            FActorComponentTickFunction* ThisTickFunction)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
 	if (!ComponentOwner.IsValid()) return;
 	if (!IsValid(ExplosionProfile)) return;
+
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
 void UExplosionComponent::Explode()
