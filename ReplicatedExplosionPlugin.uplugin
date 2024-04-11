@@ -2,7 +2,7 @@
 	"FileVersion": 3,
 	"Version": 1,
 	"VersionName": "1.0",
-	"FriendlyName": "Replicated Explosion Plugin",
+	"FriendlyName": "Frontline Replicated Explosion Plugin",
 	"Description": "Replicated Explosion Plugin brings a complete replicated explosion system in multiplayer using data assets as profiles",
 	"Category": "Internal",
 	"CreatedBy": "Victor Henrique | Wise Labs: Gameworks",
