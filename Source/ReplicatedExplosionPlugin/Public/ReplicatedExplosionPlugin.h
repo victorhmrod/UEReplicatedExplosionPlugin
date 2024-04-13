@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Replicated Explosion Plugin - Unreal Engine Plugin - (c) Wise Labs 2020-2024
 
 #pragma once
 
@@ -9,7 +9,6 @@ class FReplicatedExplosionPluginModule : public IModuleInterface
 {
 public:
 
-	/** IModuleInterface implementation */
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
 };
