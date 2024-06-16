@@ -16,34 +16,46 @@ class UExplosionProfile : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFX")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX|Particles")
 	TObjectPtr<UParticleSystem> CascadedParticle;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFX")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX|Particles")
 	TObjectPtr<UNiagaraSystem> NiagaraParticle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX|Particles")
+	bool ShouldUseCascadedAndNiagaraParticle;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFX")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX|Particles")
 	FVector EffectScale = {1.f, 1.f, 1.f};
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFX")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX|CameraShake")
 	TSubclassOf<UCameraShakeBase> CamShakeClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SFX")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX|CameraShake")
+	float CameraShakeInnerRadius{50.f};
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX|CameraShake")
+	float CameraShakeFalloff{50.f};
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX|Sound")
 	TObjectPtr<USoundBase> Sound;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Misc")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Damage")
+	TArray<AActor*> IgnoreThisActorsInExplosion;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI")
 	FName NoiseTag = "1";
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SFX")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX|Sound")
 	TObjectPtr<USoundAttenuation> Attenuation;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage")
 	float Radius = 1000.0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage")
 	FVector2D DamageRange = {15, 30};
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage")
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
 };
 

@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Damage_Interface.generated.h"
+#include "ExplosionInterface.generated.h"
 
 UINTERFACE()
-class UDamage_Interface : public UInterface
+class UExplosionInterface : public UInterface
 {
 	GENERATED_BODY()
 };
 
-class REPLICATEDEXPLOSIONPLUGIN_API IDamage_Interface
+class REPLICATEDEXPLOSIONPLUGIN_API IExplosionInterface
 {
 	GENERATED_BODY()
 

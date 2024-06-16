@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Data/ExplosionProfileData.h"
 #include "ExplosionComponent.generated.h"
 
 UCLASS(ClassGroup=(EC), meta=(BlueprintSpawnableComponent))
@@ -22,20 +21,27 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Data")
-	TObjectPtr<UExplosionProfile> ExplosionProfile;
 	
+
+	// Explode the owner of this component!
 	UFUNCTION(BlueprintCallable, Category="Explosion")
-	void Explode();
+	void Explode(const bool& ShouldAutoDestroy);
+
+	UPROPERTY(EditAnywhere, Category="Explosion")
+	TArray<AActor*> IgnoreThisActorsInExplosion;
+	
 
 private:
-	UFUNCTION(NetMulticast, Reliable, Category="Explosion")
-	void Multicast_PropagateEffects(const FVector InOwnerLocation);
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_Explode(const FVector InOwnerLocation);
 
-	UFUNCTION(Server, Reliable, Category="Explosion")
-	void Server_PropagateDamage(const FVector InOwnerLocation);
+	UFUNCTION(Server, Reliable)
+	void Server_Explode(const FVector InOwnerLocation);
+
+	UPROPERTY()
+	AActor* ComponentOwner;
 
 protected:
-	UPROPERTY(Category="Info", BlueprintReadOnly, Transient)
-	TWeakObjectPtr<AActor> ComponentOwner;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Data")
+	class UExplosionProfile* ExplosionProfile;
 };
