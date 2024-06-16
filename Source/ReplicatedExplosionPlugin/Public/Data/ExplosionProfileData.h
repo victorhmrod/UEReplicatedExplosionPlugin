@@ -32,10 +32,10 @@ public:
 	TSubclassOf<UCameraShakeBase> CamShakeClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX|CameraShake")
-	float CameraShakeInnerRadius{50.f};
+	float CameraShakeInnerRadius{2000.f};
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX|CameraShake")
-	float CameraShakeFalloff{50.f};
+	float CameraShakeFalloff{1.f};
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX|Sound")
 	TObjectPtr<USoundBase> Sound;

@@ -14,6 +14,8 @@ class REPLICATEDEXPLOSIONPLUGIN_API UExplosionComponent : public UActorComponent
 public:
 	UExplosionComponent();
 
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -25,18 +27,14 @@ public:
 
 	// Explode the owner of this component!
 	UFUNCTION(BlueprintCallable, Category="Explosion")
-	void Explode(const bool& ShouldAutoDestroy);
+	void Explode(const bool ShouldAutoDestroy);
 
-	UPROPERTY(EditAnywhere, Category="Explosion")
-	TArray<AActor*> IgnoreThisActorsInExplosion;
-	
-
-private:
+private:	
 	UFUNCTION(NetMulticast, Reliable)
-	void Multicast_Explode(const FVector InOwnerLocation);
+	void Multicast_Explode();
 
 	UFUNCTION(Server, Reliable)
-	void Server_Explode(const FVector InOwnerLocation);
+	void Server_Explode();
 
 	UPROPERTY()
 	AActor* ComponentOwner;
