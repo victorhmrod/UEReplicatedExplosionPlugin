@@ -1,14 +1,12 @@
 ﻿// Replicated Explosion Plugin - Unreal Engine Plugin - (c) Wise Labs 2020-2024
 
-
 #include "Core/ExplosionComponent.h"
 
 #include "NiagaraFunctionLibrary.h"
 #include "Data/ExplosionProfileData.h"
-#include "Kismet/GameplayStatics.h"
-#include "GameFramework/Actor.h"
 #include "Engine/World.h"
-#include "Net/UnrealNetwork.h"
+#include "GameFramework/Actor.h"
+#include "Kismet/GameplayStatics.h"
 #include "Utils/ExplosionInterface.h"
 
 UExplosionComponent::UExplosionComponent()
